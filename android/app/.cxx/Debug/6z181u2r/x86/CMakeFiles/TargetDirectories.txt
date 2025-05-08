@@ -1,0 +1,2 @@
+D:/flutter/doc_appointment_app/android/app/.cxx/Debug/6z181u2r/x86/CMakeFiles/edit_cache.dir
+D:/flutter/doc_appointment_app/android/app/.cxx/Debug/6z181u2r/x86/CMakeFiles/rebuild_cache.dir

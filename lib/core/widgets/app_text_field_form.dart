@@ -8,12 +8,16 @@ class AppTextFieldForm extends StatelessWidget {
   final String hintText;
   final bool? isObsecured;
   final Widget? suffixIcon;
+  final Function(String?) validator;
+  final TextEditingController? controller;
 
   const AppTextFieldForm({
     super.key,
+    required this.validator,
+    required this.hintText,
+    this.controller,
     this.isObsecured,
     this.suffixIcon,
-    required this.hintText,
   });
 
   @override
@@ -21,8 +25,13 @@ class AppTextFieldForm extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
+        controller: controller,
+        validator: (value) {
+          return validator(value);
+        },
         cursorColor: ColorsManager.mainBlue,
         obscureText: isObsecured ?? false,
+        style: TextStyles.font14DarkBlueMedium,
         obscuringCharacter: '*',
         decoration: InputDecoration(
           isDense: true,
@@ -40,6 +49,12 @@ class AppTextFieldForm extends StatelessWidget {
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: ColorsManager.gray, width: 1.3),
           ),
+          errorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red, width: 1.3),
+              borderRadius: BorderRadius.circular(16)),
+          focusedErrorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red, width: 1.3),
+              borderRadius: BorderRadius.circular(16)),
         ),
       ),
     );

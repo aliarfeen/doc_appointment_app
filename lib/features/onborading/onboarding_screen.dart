@@ -7,7 +7,6 @@ import 'package:doc_appointment_app/core/theming/styles.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
