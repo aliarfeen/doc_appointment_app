@@ -1,3 +1,4 @@
+import 'package:doc_appointment_app/core/helpers/regex.dart';
 import 'package:doc_appointment_app/core/widgets/app_text_field_form.dart';
 import 'package:doc_appointment_app/features/login/logic/cubit/login_cubit.dart';
 import 'package:doc_appointment_app/features/login/ui/widgets/password_validations.dart';
@@ -25,6 +26,20 @@ class _EmailAndPasswordState extends State<EmailAndPassword> {
   void initState() {
     super.initState();
     passwordController = context.read<LoginCubit>().passwordController;
+    setupPasswordControllerlistener();
+  }
+
+  void setupPasswordControllerlistener() {
+    passwordController.addListener(() {
+      setState(() {
+        hasLowerCase = AppRegex.hasLowerCase(passwordController.text);
+        hasUpperCase = AppRegex.hasUpperCase(passwordController.text);
+        hasSpecialCharacters =
+            AppRegex.hasSpecialCharacter(passwordController.text);
+        hasNumber = AppRegex.hasNumber(passwordController.text);
+        hasMinLength = AppRegex.hasMinLength(passwordController.text);
+      });
+    });
   }
 
   @override
@@ -37,12 +52,15 @@ class _EmailAndPasswordState extends State<EmailAndPassword> {
               hintText: 'Email',
               controller: context.read<LoginCubit>().emailController,
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (value == null ||
+                    value.isEmpty ||
+                    !AppRegex.isEmailValid(value)) {
                   return "Please enter valid Email";
                 }
               },
             ),
             AppTextFieldForm(
+              controller: context.read<LoginCubit>().passwordController,
               //we ddnt complete validator here (here's ur check point)
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -72,5 +90,11 @@ class _EmailAndPasswordState extends State<EmailAndPassword> {
             ),
           ],
         ));
+  }
+
+  @override
+  void dispose() {
+    passwordController.removeListener(() {});
+    super.dispose();
   }
 }

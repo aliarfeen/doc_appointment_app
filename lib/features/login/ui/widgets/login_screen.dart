@@ -2,21 +2,20 @@ import 'package:doc_appointment_app/core/helpers/spacers.dart';
 import 'package:doc_appointment_app/core/theming/styles.dart';
 import 'package:doc_appointment_app/core/widgets/app_text_button.dart';
 import 'package:doc_appointment_app/core/widgets/app_text_field_form.dart';
+import 'package:doc_appointment_app/features/login/data/models/login_request_body.dart';
+import 'package:doc_appointment_app/features/login/logic/cubit/login_cubit.dart';
 import 'package:doc_appointment_app/features/login/ui/widgets/email_and_password.dart';
+import 'package:doc_appointment_app/features/login/ui/widgets/login_bloc_listener.dart';
 import 'package:doc_appointment_app/features/login/ui/widgets/terms_and_conditions.dart';
 import 'package:doc_appointment_app/features/login/ui/widgets/you_have_acc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  bool isObsecure = true;
+  // bool isObsecure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   buttonText: 'Log in',
                   textStyle: TextStyles.font18WhiteMedium,
                   onPressed: () {
-                    _validateThemSubmit();
+                    _validateThemSubmit(context);
                   },
                 ),
                 verticalSpacer(16),
@@ -62,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TermsAndConditionsText(),
                       verticalSpacer(32),
                       DontHaveAccountText(),
+                      LoginBlocListener(),
                     ],
                   ),
                 ),
@@ -73,5 +73,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _validateThemSubmit() {}
+  void _validateThemSubmit(BuildContext context) {
+    if (context.read<LoginCubit>().formKey.currentState!.validate()) {
+      context.read<LoginCubit>().emitLoadingState(
+            LoginRequestBody(
+                email: context.read<LoginCubit>().emailController.text,
+                password: context.read<LoginCubit>().passwordController.text),
+          );
+    }
+  }
 }
